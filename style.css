@@ -1,0 +1,92 @@
+/* CSS HEX */
+:root{--cadet-gray: #A8B8C0ff;
+--rich-black: #08131Bff;
+--french-gray: #C3CACFff;
+--charcoal: #2B3A46ff;
+--white: #FBFBFBff;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    padding: 10px;
+    width:250px;
+    height:180px;
+    border:8px solid charcoal;
+    border-radius:3px;
+    margin:0px;
+    background-color:lightslategray;
+
+
+
+  }
+
+#logo{
+  width:100px;
+  border: 10px solid cadet-gray;
+  border-radius:3px;
+  
+  
+}
+#logodiv{
+  width:100px;
+  margin:auto;
+
+}
+
+/* CSS */
+#generateQuiz {
+  background-color: charcoal;
+  border-radius: 8px;
+  border-style: none;
+  box-sizing: border-box;
+  color: rich-black;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  height: 40px;
+  line-height: 20px;
+  list-style: none;
+  margin: 0;
+  outline: none;
+  padding: 8px 12px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transition: color 100ms;
+  vertical-align: baseline;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  position:absolute; 
+  margin-left:-100px;
+  left:50%;
+  width:200px;
+  bottom:10px;
+ 
+
+}
+
+#generateQuiz:hover,
+#generateQuiz:focus {
+  background-color: darkslategray;
+}
+
+#title{
+    text-align:center;
+    width:200px;
+    margin: 30px auto;
+
+}
+
+
+  #quizContainer {
+    margin-top: 20px;
+  }
+
+  .answerdiv{
+    visibility:hidden;
+    content-visibility:hidden;
+  }
+  
