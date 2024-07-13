@@ -12,7 +12,6 @@ chrome.storage.sync.get('start', (result) => {
     if(JSON.stringify(result)=="{}"){
         chrome.storage.sync.set({ start: document.body.innerHTML }, () => {
             console.log('Saved original page');
-            console.log(quizHtml);
           });
     }
 });
@@ -29,6 +28,10 @@ function reset(){
             document.body.style.height='180px';
             document.getElementById('generateQuiz').addEventListener('click', generateQuiz);
             unblurPage();
+            chrome.storage.sync.set({ quizHtml: "" }, () => {
+              console.log('Quiz cleared from storage');
+              
+            });
 
         }
     });
@@ -122,6 +125,8 @@ function makeResetButton(){
     document.getElementById("buttonHolder").appendChild(resetButtonCont);
     document.getElementById("reset").addEventListener('click',reset);
 
+    
+
     //<div class = "buttons" id = "resetButtonHolder"> <button id="reset">Reset</button></div>
 }
 
@@ -130,14 +135,22 @@ function makeResetButton(){
 
 function generateQuiz(){
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const tab = tabs[0];
         chrome.scripting.executeScript({
-          target: { tabId: tabs[0].id },
+          target: { tabId: tab.id },
           func: extractTextFromPage
         }, async (results) => {
           var text = results[0].result;
           cleanText = cleanString(text);
+          if(false){
+            const tooLong = document.createElement("p");
+            tooLong.innerHTML ="Sorry. This website is too long.";
+            document.getElementById("generateButtonHolder").appendChild(tooLong);
+          }else{
+          
+          
           try {
-            var textjson = {"text":cleanText}
+            const textjson = {"url":tab.url,"text":cleanText};
             const quizHtml = await generateQuizFromText(textjson);
             const quizContainer = document.getElementById('quizContainer');
             quizContainer.innerHTML = quizHtml;
@@ -157,6 +170,7 @@ function generateQuiz(){
             const quizContainer = document.getElementById('quizContainer');
             quizContainer.innerHTML = `<p>Error generating quiz: ${error.message}</p>`;
           }
+        }
         });
       });
 
