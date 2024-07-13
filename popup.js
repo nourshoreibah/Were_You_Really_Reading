@@ -3,8 +3,39 @@ document.addEventListener('DOMContentLoaded', () => {
     loadQuiz();
     
   });
+
+
+
+
+
+chrome.storage.sync.get('start', (result) => {
+    if(JSON.stringify(result)=="{}"){
+        chrome.storage.sync.set({ start: document.body.innerHTML }, () => {
+            console.log('Saved original page');
+            console.log(quizHtml);
+          });
+    }
+});
+
+
+function reset(){
+    chrome.storage.sync.get('start', (result) => {
+        console.log(JSON.stringify(result));
+        if(result.start){
+            console.log("loading original page")
+            
+            document.body.innerHTML = result.start;
+            document.body.style.width = '250px';
+            document.body.style.height='180px';
+            document.getElementById('generateQuiz').addEventListener('click', generateQuiz);
+            unblurPage();
+
+        }
+    });
    
-chrome.runtime.connect({ name: "popup" });
+    
+}
+   
 function cleanString(inputString){
     
     let result="";
@@ -31,6 +62,15 @@ function unblurPage(){
     )
 }
 
+function addLoader(){
+    document.getElementById("loaderHolder").innerHTML='<span class="loader"></span>';
+}
+
+function removeLoader(){
+    document.getElementById("loaderHolder").innerHTML='';
+   
+}
+
 
 function blurPage(){
     chrome.tabs.query({active:true,currentWindow:true},(tabs)=>{
@@ -45,46 +85,85 @@ function blurPage(){
     )
 }
 
-
-document.getElementById('generateQuiz').addEventListener('click', () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.scripting.executeScript({
-        target: { tabId: tabs[0].id },
-        func: extractTextFromPage
-      }, async (results) => {
-        var text = results[0].result;
-        cleanText = cleanString(text);
-        try {
-          var textjson = {"text":cleanText}
-          const quizHtml = await generateQuizFromText(textjson);
-          const quizContainer = document.getElementById('quizContainer');
-          quizContainer.innerHTML = quizHtml;
-          
-          
-          blurPage();
-          document.getElementById('buttonHolder').innerHTML="";
-          document.body.style.height = '600px';
-          document.body.style.width = '600px';
-          saveQuizToStorage(document.body.innerHTML);
-          document.getElementById('showAnswers').addEventListener('click',()=>{
-            document.getElementById('showanswercont').innerHTML = "";
+function showAnswers(){
+    document.getElementById('showanswercont').innerHTML = "";
             
-            unblurPage();
-            var answers = document.getElementsByClassName('answerdiv');
-            for(i=0;i<answers.length;i++){
-                answers[i].style.visibility='visible'
-                answers[i].style.contentVisibility = 'visible';
-            }
+    unblurPage();
+    var answers = document.getElementsByClassName('answerdiv');
+    for(i=0;i<answers.length;i++){
+        answers[i].style.visibility='visible'
+        answers[i].style.contentVisibility = 'visible';
+    }
+    saveQuizToStorage(document.body.innerHTML);
+}
+
+function makeShowButton(){
+    const showButtonCont = document.createElement("div");
+    showButtonCont.id = "showanswercont";
+    showButtonCont.className = "buttons";
+    const showButton = document.createElement("button");
+    showButtonCont.appendChild(showButton);
+    showButton.id = "showAnswers";
+    showButton.innerHTML = "Show Answers"
+    document.getElementById("buttonHolder").appendChild(showButtonCont);
+    document.getElementById('showAnswers').addEventListener('click',showAnswers);
+    
+    // '<div id="showanswercont"><button id="showAnswers">Show Answers</button></div>'
+}
+
+function makeResetButton(){
+    const resetButtonCont = document.createElement("div");
+    resetButtonCont.id = "resetButtonHolder";
+    resetButtonCont.className = "buttons";
+    const resetButton = document.createElement("button");
+    resetButtonCont.appendChild(resetButton);
+    resetButton.id = "reset";
+    resetButton.innerHTML = "Reset"
+    document.getElementById("buttonHolder").appendChild(resetButtonCont);
+    document.getElementById("reset").addEventListener('click',reset);
+
+    //<div class = "buttons" id = "resetButtonHolder"> <button id="reset">Reset</button></div>
+}
+
+
+
+
+function generateQuiz(){
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.scripting.executeScript({
+          target: { tabId: tabs[0].id },
+          func: extractTextFromPage
+        }, async (results) => {
+          var text = results[0].result;
+          cleanText = cleanString(text);
+          try {
+            var textjson = {"text":cleanText}
+            const quizHtml = await generateQuizFromText(textjson);
+            const quizContainer = document.getElementById('quizContainer');
+            quizContainer.innerHTML = quizHtml;
+
+           makeShowButton();
+           makeResetButton();
+
+            
+            blurPage();
+            document.getElementById('generateButtonHolder').innerHTML="";
+            document.body.style.height = '600px';
+            document.body.style.width = '600px';
             saveQuizToStorage(document.body.innerHTML);
-          });
-        } catch (error) {
-          console.error('Error generating quiz:', error);
-          const quizContainer = document.getElementById('quizContainer');
-          quizContainer.innerHTML = `<p>Error generating quiz: ${error.message}</p>`;
-        }
+            
+          } catch (error) {
+            console.error('Error generating quiz:', error);
+            const quizContainer = document.getElementById('quizContainer');
+            quizContainer.innerHTML = `<p>Error generating quiz: ${error.message}</p>`;
+          }
+        });
       });
-    });
-  });
+
+
+}
+
+document.getElementById('generateQuiz').addEventListener('click', generateQuiz);
 
   
   
@@ -97,27 +176,27 @@ document.getElementById('generateQuiz').addEventListener('click', () => {
   async function generateQuizFromText(text) {
     console.log("input: "+ JSON.stringify(text))
     try {
-    //   const response = await fetch('https://sk80cbi4q1.execute-api.us-east-1.amazonaws.com/prod/generateQuiz', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(text)
-    //   });
+      const response = await fetch('https://sk80cbi4q1.execute-api.us-east-1.amazonaws.com/prod/generateQuiz', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(text)
+      });
       
   
-    //   console.log('Response status:', response.status);
-    //   console.log('Response headers:', response.headers);
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
   
-    //   const responseBody = await response.text();
-    //   console.log('Response body:', responseBody);
+      const responseBody = await response.text();
+      console.log('Response body:', responseBody);
   
-    //   if (!response.ok) {
-    //     throw new Error(`HTTP error! Status: ${response.status}, Message: ${responseBody}`);
-    //   }
-  const data = JSON.parse('{"quiz":{"questions":[{"question":"What is the practice and study of techniques for secure communication in the presence of adversaries called?","options":["Algorithm","Cryptography","Networking","Decryption"],"answer":"Cryptography"},{"question":"What are the two steps involved in sending a secure message?","options":["Encryption and Decryption","Encoding and Decoding","Transmission and Reception","Authentication and Authorization"],"answer":"Encryption and Decryption"},{"question":"What is the name of the application-layer protocol used in the assignment for encryption problems?","options":["Caesar Cipher","Vigenère Cipher","RSA Encryption","AES Encryption"],"answer":"Caesar Cipher"}]}}');
-    //   const data = JSON.parse(responseBody);
-    //   console.log('Parsed data:', data);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}, Message: ${responseBody}`);
+      }
+//   const data = JSON.parse('{"quiz":{"questions":[{"question":"What is the practice and study of techniques for secure communication in the presence of adversaries called?","options":["Algorithm","Cryptography","Networking","Decryption"],"answer":"Cryptography"},{"question":"What are the two steps involved in sending a secure message?","options":["Encryption and Decryption","Encoding and Decoding","Transmission and Reception","Authentication and Authorization"],"answer":"Encryption and Decryption"},{"question":"What is the name of the application-layer protocol used in the assignment for encryption problems?","options":["Caesar Cipher","Vigenère Cipher","RSA Encryption","AES Encryption"],"answer":"Caesar Cipher"}]}}');
+      const data = JSON.parse(responseBody);
+      console.log('Parsed data:', data);
   
       if (data.error) {
         throw new Error(data.error);
@@ -147,7 +226,7 @@ document.getElementById('generateQuiz').addEventListener('click', () => {
       
     }
 
-    outputHTML+= '<div id="showanswercont"><button id="showAnswers">Show Answers</button></div>'
+   
 
     
   
@@ -187,6 +266,8 @@ document.getElementById('generateQuiz').addEventListener('click', () => {
                 saveQuizToStorage(document.body.innerHTML);
               });
         }
+        document.getElementById("reset").addEventListener('click',reset);
+
       }
     });
   }
