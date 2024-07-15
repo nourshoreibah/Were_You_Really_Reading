@@ -37,7 +37,7 @@ I created this project in an attempt to hone my HTML, CSS, JS, and back end deve
 
 ### Features
 - Simple, intuitive, and interactive UI with dynamic content
-- Text extraction and filtering: removes unescessary characters to reduce cost of OpenAI API call
+- Text extraction and filtering: Extracts website content and removes unescessary characters to reduce cost of OpenAI API call
 - AI Quiz generation that works on any website that isn't abnormally long (can add support for long websites in the future by splitting websites into portions and making multiple API calls)
 - Persistent application state that allows user to seamlessly close popup and revisit without losing progress
 - Serverless, lower-cost quiz generation function
