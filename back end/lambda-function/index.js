@@ -44,6 +44,8 @@ exports.handler = async (event) => {
     ]
   }
 
+  Do not include selectors such as "A.", "B.", "C.", or "D." in the options text. Ensure that there is only one correct answer, and that the "answer" field mathces the correct answer from the "options" field exactly. Do not ask repeat questions.
+
   Here is the website: "${text}"`;
 
   console.log("prompt: " + prompt);

@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "AI Quiz Maker",
+  "name": "Were You Really Reading?",
   "version": "1.0",
   "description": "Create multiple-choice quizzes from web pages.",
   "permissions": ["activeTab", "scripting", "storage"],
