@@ -21,7 +21,7 @@ I created this project in an attempt to hone my HTML, CSS, JS, and back end deve
 ### Back End
 
 1. **AWS DynamoDB** (no-sql database)
-- Used for effeciently storing past quizzes
+- Used for efficiently storing past quizzes
 - Reduces costs by minimizing OpenAI API calls
 
 2. **AWS Lambda Function**
@@ -41,7 +41,7 @@ I created this project in an attempt to hone my HTML, CSS, JS, and back end deve
 - AI Quiz generation that works on any website that isn't abnormally long (can add support for long websites in the future by splitting websites into portions and making multiple API calls)
 - Persistent application state that allows user to seamlessly close popup and revisit without losing progress
 - Serverless, lower-cost quiz generation function
-- Effecient quiz generation with DynamoDB to prevent repeat quizzes
+- Efficient quiz generation with DynamoDB to prevent repeat quizzes
 - Blurs page until show answers or reset is clicked to discourage cheating ;)
 - Indicates which answer is correct, which you selected, and a graphic displaying your score upon clicking "show answers"
 ### UI Screenshots
