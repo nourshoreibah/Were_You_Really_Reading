@@ -35,7 +35,7 @@ I created this project in an attempt to hone my HTML, CSS, JS, and back end deve
 3. **AWS API Gateway**
 - Creates a REST API for lambda function
 
-## Features
+### Features
 - Simple, intuitive, and interactive UI with dynamic content
 - Text extraction and filtering: removes unescessary characters to reduce cost of OpenAI API call
 - AI Quiz generation that works on any website that isn't abnormally long (can add support for long websites in the future by splitting websites into portions and making multiple API calls)
@@ -45,8 +45,9 @@ I created this project in an attempt to hone my HTML, CSS, JS, and back end deve
 - Blurs page until show answers or reset is clicked to discourage cheating ;)
 - Indicates which answer is correct, which you selected, and a graphic displaying your score upon clicking "show answers"
 
-## Screenshots
+### App Demo
 ![image](readmeImages/appDemo.png)
+### Back End Diagram
 ![image](readmeImages/backEnd.png)
 
 
