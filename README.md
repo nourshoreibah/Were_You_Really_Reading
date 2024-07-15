@@ -3,7 +3,7 @@
 
 
 ## Background
-I created this project in an attempt to hone my HTML, CSS, JS, and back end development skills. Do you ever finish passively reading something and realzie you haven't actually absorbed any of the information? This handy Chrome Extension uses generative AI to create a short, multiple-choice quiz for any website to improve reading comprehension.
+I created this project in an attempt to hone my HTML, CSS, JS, and back end development skills. Do you ever finish passively reading something and realize you haven't actually absorbed any of the information? This handy Chrome Extension uses generative AI to create a short, multiple-choice quiz for any website to improve reading comprehension.
 
 ## Tech Stack
 
