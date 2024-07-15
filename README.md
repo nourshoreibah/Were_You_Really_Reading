@@ -44,7 +44,8 @@ I created this project in an attempt to hone my HTML, CSS, JS, and back end deve
 - Effecient quiz generation with DynamoDB to prevent repeat quizzes
 - Blurs page until show answers or reset is clicked to discourage cheating ;)
 - Indicates which answer is correct, which you selected, and a graphic displaying your score upon clicking "show answers"
-
+### UI Screenshots
+![image](readmeImages/largeScreenshots.png)
 ### App Demo
 ![image](readmeImages/appDemo.png)
 ### Back End Diagram
