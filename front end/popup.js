@@ -1,4 +1,4 @@
-
+// This event listener runs the loadQuiz() function once the DOM content is loaded. The purpose of this is to maintain the state of the popup window even if the user closes and opens it.
 document.addEventListener('DOMContentLoaded', () => {
     loadQuiz();
     
@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
+// If it has not previouslt been saved, the popup will save its original state (to be used when the user presses reset) 
 chrome.storage.local.get('start', (result) => {
     if(JSON.stringify(result)=="{}"){
         chrome.storage.local.set({ start: document.body.innerHTML }, () => {
@@ -16,7 +16,7 @@ chrome.storage.local.get('start', (result) => {
     }
 });
 
-
+// This function resets the popup to its original state using the backup stored above
 function reset(){
     chrome.storage.local.get('start', (result) => {
         console.log(JSON.stringify(result));
@@ -38,7 +38,8 @@ function reset(){
    
     
 }
-   
+
+// This function reduces the number of tokens in the web content to increase effeciency. It removes any non alphanumerical characters other than space and period
 function cleanString(inputString){
     
     let result="";
@@ -48,10 +49,9 @@ function cleanString(inputString){
         }
     }
     return result;
-    
-
 }
 
+// This function unblurs the page the website is loking at
 function unblurPage(){
     chrome.tabs.query({active:true,currentWindow:true},(tabs)=>{
         chrome.scripting.executeScript({
@@ -65,16 +65,7 @@ function unblurPage(){
     )
 }
 
-function addLoader(){
-    document.getElementById("loaderHolder").innerHTML='<span class="loader"></span>';
-}
-
-function removeLoader(){
-    document.getElementById("loaderHolder").innerHTML='';
-   
-}
-
-
+// This function blurs the page the website is looking at
 function blurPage(){
     chrome.tabs.query({active:true,currentWindow:true},(tabs)=>{
         chrome.scripting.executeScript({
@@ -88,6 +79,7 @@ function blurPage(){
     )
 }
 
+// This function reveals the answers for each question and scores the quiz
 function showAnswers(){
     document.getElementById('showanswercont').innerHTML = "";
     
@@ -125,6 +117,7 @@ function showAnswers(){
     saveRadioState();
 }
 
+// This function creates the show answers button that is used to reveal answers and score quiz
 function makeShowButton(){
     const showButtonCont = document.createElement("div");
     showButtonCont.id = "showanswercont";
@@ -139,6 +132,7 @@ function makeShowButton(){
     // '<div id="showanswercont"><button id="showAnswers">Show Answers</button></div>'
 }
 
+// THis function creates the reset button which returns the popup to its original state whnen pressed
 function makeResetButton(){
     const resetButtonCont = document.createElement("div");
     resetButtonCont.id = "resetButtonHolder";
@@ -157,7 +151,7 @@ function makeResetButton(){
 
 
 
-
+// This function generates the quiz by making an API call to AWS lambda
 function generateQuiz(){
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         const tab = tabs[0];
@@ -207,13 +201,13 @@ function generateQuiz(){
 document.getElementById('generateQuiz').addEventListener('click', generateQuiz);
 
   
-  
+  // This function extracts the text from the current page
   function extractTextFromPage() {
     return document.body.innerText;
   }
 
 
-  
+  // This helper function for generate quiz takes the filtered web content and makes the Lambda API call. It then returns the quiz in HTML format.
   async function generateQuizFromText(text) {
   
     try {
@@ -286,12 +280,6 @@ document.getElementById('generateQuiz').addEventListener('click', generateQuiz);
       
       
     }
-    
-
-   
-
-    
-  
       return outputHTML;
     } catch (error) {
       console.error('Error generating quiz:', error);
@@ -300,6 +288,8 @@ document.getElementById('generateQuiz').addEventListener('click', generateQuiz);
     
   }
 
+// This function saves the state of each radio button, ensuring the user's responses are not lost after closing the popup. 
+// The states of radio buttons are not part of the HTML text, so their states need to be saved seperately
   function saveRadioState() {
     const radioState = {};
     const radios = document.querySelectorAll('input[type=radio]');
@@ -327,6 +317,8 @@ document.getElementById('generateQuiz').addEventListener('click', generateQuiz);
     });
   }
 
+// This function attaches listeners to each radio button so that radio state is saved everytime a change is made
+// Note event listeners must be reloaded everytime the popup is closed and reopened
   function attachRadioListeners() {
     const radios = document.querySelectorAll('input[type="radio"]');
     radios.forEach(radio => {
@@ -335,6 +327,7 @@ document.getElementById('generateQuiz').addEventListener('click', generateQuiz);
     });
   }
 
+// This function disables the radio buttons and is called once the user presses show answers
   function disableRadioButtons(){
     const radios = document.querySelectorAll('input[type="radio"]');
     radios.forEach(radio => {
@@ -343,6 +336,7 @@ document.getElementById('generateQuiz').addEventListener('click', generateQuiz);
 
   }
 
+// This function saves the popup's HTML text to Chrome storage
   function saveQuizToStorage(quizHtml) {
     chrome.storage.local.set({ quizHtml: quizHtml }, () => {
       console.log('Quiz saved to storage.');
@@ -351,6 +345,7 @@ document.getElementById('generateQuiz').addEventListener('click', generateQuiz);
 
   }
 
+// This function loads the popup's HTML content from Chrome storage if it exists and restores event listeners, radio button state, and popup dimensions
   function loadQuiz() {
     chrome.storage.local.get('quizHtml', (result) => {
       if (result.quizHtml) {
