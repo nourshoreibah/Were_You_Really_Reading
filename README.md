@@ -52,7 +52,7 @@ Do you ever finish passively reading something and realize you haven't actually 
 ### App Demo
 ![image](readmeImages/appDemo.png)
 ### Back End Diagram
-![image](readmeImages/backEnd.png)
+![image](readmeImages/backEndDiagram.png)
 
 
 
