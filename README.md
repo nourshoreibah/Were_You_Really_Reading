@@ -47,6 +47,13 @@ Do you ever finish passively reading something and realize you haven't actually 
 - Simple, intuitive, and interactive UI with dynamic content
 - Built on a completely serverless, pay per second architecture
 - Efficient quiz generation with DynamoDB to prevent repeat quizzes
+
+### LLM Fine-Tuning Process
+- Downloaded SQuAD dataset, which contains passages, questions, and answers
+- Used Llama3 to locally generate 3 incorrect answer choices for each question
+- Created an adapted version of SQuAD with part of a passage, questions, answer choices, and a correct answer
+- Used LoRA with Apple MLX Framework to fine-tune Phi3 Mini 4b
+- Deployed model to Runpod, taking advantage of their per-second pricing model
 ### UI Screenshots
 ![image](readmeImages/largeScreenshots.jpg)
 ### App Demo
