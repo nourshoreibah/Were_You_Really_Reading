@@ -3,7 +3,9 @@
 
 
 ## Background
-I created this project in an attempt to hone my HTML, CSS, JS, and back end development skills. Do you ever finish passively reading something and realize you haven't actually absorbed any of the information? This handy Chrome Extension uses generative AI to create a short, multiple-choice quiz for any website to improve reading comprehension.
+I created this project in an attempt to hone my dataset manipulation, LLM fine-tuning, and web development skills. 
+
+Do you ever finish passively reading something and realize you haven't actually absorbed any of the information? This handy Chrome Extension uses generative AI to create a short, multiple-choice quiz for any website to improve reading comprehension.
 
 ## Tech Stack
 
@@ -26,24 +28,25 @@ I created this project in an attempt to hone my HTML, CSS, JS, and back end deve
 
 2. **AWS Lambda Function**
 - **Node.JS** runtime environment
-- **OpenAI API**
 - Does the following:
-  - Checks DynamoDB for existing quiz to prevent unescessary OpenAI API calls
-  - Generates new quizzes using OpenAI's JSON response mode if existing quiz not found
-  - Stores new quiz in DynamoDB 
+  - Checks DynamoDB for existing quiz to prevent unescessary inference
+  - Calls custom fine-tuned Phi3 Model to generate new quizzes if existing quiz not found
+  - Stores new quiz in DynamoDB
+  - Responds to cline with quiz
 
 3. **AWS API Gateway**
 - Creates a REST API for lambda function
 
+4. **Custom Fine-Tuned Phi3 Mini Deployment (Runpod Serverless)**
+- Generates quizzes given websie content
+- Called by the Lambda Function above 
+
+
 ### Features
+- Custom Fine-Tuned Phi3 Mini Model for quiz generation
 - Simple, intuitive, and interactive UI with dynamic content
-- Text extraction and filtering: Extracts website content and removes unescessary characters to reduce cost of OpenAI API call
-- AI Quiz generation that works on any website that isn't abnormally long (can add support for long websites in the future by splitting websites into portions and making multiple API calls)
-- Persistent application state that allows user to seamlessly close popup and revisit without losing progress
-- Serverless, lower-cost quiz generation function
+- Built on a completely serverless, pay per second architecture
 - Efficient quiz generation with DynamoDB to prevent repeat quizzes
-- Blurs page until show answers or reset is clicked to discourage cheating ;)
-- Indicates which answer is correct, which you selected, and a graphic displaying your score upon clicking "show answers"
 ### UI Screenshots
 ![image](readmeImages/largeScreenshots.jpg)
 ### App Demo
