@@ -226,10 +226,13 @@ document.getElementById('generateQuiz').addEventListener('click', generateQuiz);
   
       const responseBody = await response.text();
       
-  
+
+      console.log("Response: " + responseBody)
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}, Message: ${responseBody}`);
       }
+
+      
 //   const data = JSON.parse('{"quiz":{"questions":[{"question":"What is the practice and study of techniques for secure communication in the presence of adversaries called?","options":["Algorithm","Cryptography","Networking","Decryption"],"answer":"Cryptography"},{"question":"What are the two steps involved in sending a secure message?","options":["Encryption and Decryption","Encoding and Decoding","Transmission and Reception","Authentication and Authorization"],"answer":"Encryption and Decryption"},{"question":"What is the name of the application-layer protocol used in the assignment for encryption problems?","options":["Caesar Cipher","Vigenère Cipher","RSA Encryption","AES Encryption"],"answer":"Caesar Cipher"}]}}');
       const data = JSON.parse(responseBody);
       
@@ -240,7 +243,7 @@ document.getElementById('generateQuiz').addEventListener('click', generateQuiz);
   
      
 
-      const questions = data.quiz.questions;
+      const questions = data.quiz;
       let outputHTML = "";
       console.log(JSON.stringify(questions));
 
@@ -248,30 +251,30 @@ document.getElementById('generateQuiz').addEventListener('click', generateQuiz);
         
         outputHTML+=`
         <div class = "questiondiv">
-          <p>Question ${i+1}: ${questions[i].question}</p>
+          <p>Question ${i+1}: ${questions[i].Question}</p>
 
           <div class = "option">
-          <input type="radio" class = "q${i} ${((questions[i].options[0] == questions[i].answer) ? 'correct' : 'incorrect')}" id="q${i}a" name="q${i+1}" value="${questions[i].options[0]}"><br>
-          <label id="q${i}aL" for="q${i}a">a. ${questions[i].options[0]}</label>
+          <input type="radio" class = "q${i} ${((questions[i].Choices[0] == questions[i].Answer) ? 'correct' : 'incorrect')}" id="q${i}a" name="q${i+1}" value="${questions[i].Choices[0]}"><br>
+          <label id="q${i}aL" for="q${i}a">a. ${questions[i].Choices[0]}</label>
           </div>
 
           <div class = "option">
-          <input type="radio" class = "q${i} ${((questions[i].options[1] == questions[i].answer) ? 'correct' : 'incorrect')}" id="q${i}b" name="q${i+1}" value="${questions[i].options[1]}"><br>
-          <label id="q${i}bL" for="q${i}b">b. ${questions[i].options[1]}</label>
+          <input type="radio" class = "q${i} ${((questions[i].Choices[1] == questions[i].Answer) ? 'correct' : 'incorrect')}" id="q${i}b" name="q${i+1}" value="${questions[i].Choices[1]}"><br>
+          <label id="q${i}bL" for="q${i}b">b. ${questions[i].Choices[1]}</label>
           </div>
 
           <div class = "option">
-          <input type="radio" class = "q${i} ${((questions[i].options[2] == questions[i].answer) ? 'correct' : 'incorrect')}" id="q${i}c" name="q${i+1}" value="${questions[i].options[2]}"><br>
-          <label id="q${i}cL" for="q${i}c">c. ${questions[i].options[2]}</label>
+          <input type="radio" class = "q${i} ${((questions[i].Choices[2] == questions[i].Answer) ? 'correct' : 'incorrect')}" id="q${i}c" name="q${i+1}" value="${questions[i].Choices[2]}"><br>
+          <label id="q${i}cL" for="q${i}c">c. ${questions[i].Choices[2]}</label>
           </div>
 
           <div class ="option">
-          <input type="radio" class = "q${i} ${((questions[i].options[3] == questions[i].answer) ? 'correct' : 'incorrect')}" id="q${i}d" name="q${i+1}" value="${questions[i].options[3]}"><br>
-          <label id="q${i}dL" for="q${i}d">d. ${questions[i].options[3]}</label>
+          <input type="radio" class = "q${i} ${((questions[i].Choices[3] == questions[i].Answer) ? 'correct' : 'incorrect')}" id="q${i}d" name="q${i+1}" value="${questions[i].Choices[3]}"><br>
+          <label id="q${i}dL" for="q${i}d">d. ${questions[i].Choices[3]}</label>
           </div>
         
         <div class = "answerdiv" id = "answer${i}">
-            <p>Answer: ${questions[i].answer}</p>
+            <p>Answer: ${questions[i].Answer}</p>
         </div>
         </div>
         <hr>

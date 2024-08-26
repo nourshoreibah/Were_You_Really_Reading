@@ -6,7 +6,8 @@ const AWS = require('aws-sdk');
 
 // Create OpenAI instance to use for API call
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY // Use environment variable for API Key (for security)
+  apiKey: process.env.RUNPOD_API_KEY,// Use environment variable for API Key (for security)
+  baseURL:'https://api.runpod.ai/v2/vllm-ba6dpoy24f6m8t/openai/v1'
 });
 
 // Create DynnamoDB DocumentClient instnce to interact with database
@@ -37,22 +38,10 @@ exports.handler = async (event) => {
   const {url,text} = body;
 
   // The prompt that will be sent to OpenAI API
-  const prompt = `Create a multiple-choice quiz with 5-10 questions from the content of this website. Provide the output in the following JSON format:
+  const prompt = `You will be given the contents of a web page. Create a multiple-choice quiz with 5 questions from the web content. Provide the output in the following JSON format: [{"Question": "Your question here","Choices": ["Option 1", "Option 2", "Option 3", "Option 4"],"Answer": "Correct option"}]. Do not include selectors such as "A.", "B.", "C.", or "D." in the options text. Ensure that there is only one correct answer, and that the "answer" field mathces the correct answer from the "options" field exactly. Make sure each question is different.`;
 
-  {
-    "questions": [
-      {
-        "question": "Your question here",
-        "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
-        "answer": "Correct option"
-      }
-    ]
-  }
-
-  Do not include selectors such as "A.", "B.", "C.", or "D." in the options text. Ensure that there is only one correct answer, and that the "answer" field mathces the correct answer from the "options" field exactly. Do not ask repeat questions.
-
-  Here is the website: "${text}"`;
-
+  
+  console.log("web content: " + text)
   console.log("prompt: " + prompt);
 
 // Try scope for quiz generation
@@ -74,26 +63,29 @@ exports.handler = async (event) => {
     // Call OpenAI API to generate a new quiz if quiz does not exist
     // Note: I am currently working on fine-tuning an open LLM to replace GPT 3.5, decreasing costs. This will be deployed to Lambda using the llama.cpp library and Docker
     const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo-1106",
+      model: "nourshoreibah/phi3miniquizgen",
       messages: [
-        { role: "system", content: "You are a helpful assistant." },
-        { role: "user", content: prompt }
+        { role: "system", content: prompt },
+        { role: "user", content: text }
       ],
       // I found this temperature is a good balance between creative questions and adherance to the correct JSON format
       temperature: 0.7,
       // Use OpenAI's new json response type to ensure response is a JSON 
-      response_format: { type: "json_object" }
+      
 
     });
    
     console.log("GPT response: " + JSON.stringify(response))
 
    // Process GPT response into a variable
-    const quiz = JSON.parse(response.choices[0].message.content.trim());
+   console.log("Quiz: " + response.choices[0].message.content.trim().replace("<|end|>",""))
+    const quiz = JSON.parse(response.choices[0].message.content.trim().replace("<|end|>",""));
+
+  
 
 
     // Validate the quiz structure and then save it to DynamoDB for future use
-    if (quiz && quiz.questions && Array.isArray(quiz.questions)) {
+    if (quiz && Array.isArray(quiz) && quiz[0].Question) {
       await saveQuizToDynamoDB(url, quiz);
       // Return quiz
       return {
