@@ -32,7 +32,7 @@ Do you ever finish passively reading something and realize you haven't actually 
   - Checks DynamoDB for existing quiz to prevent unescessary inference
   - Calls custom fine-tuned Phi3 Model to generate new quizzes if existing quiz not found
   - Stores new quiz in DynamoDB
-  - Responds to cline with quiz
+  - Responds to client with quiz
 
 3. **AWS API Gateway**
 - Creates a REST API for lambda function
