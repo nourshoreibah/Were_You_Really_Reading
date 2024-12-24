@@ -24,7 +24,7 @@ Do you ever finish passively reading something and realize you haven't actually 
 
 1. **AWS DynamoDB** (no-sql database)
 - Used for efficiently storing past quizzes
-- Reduces costs by minimizing OpenAI API calls
+- Reduces costs by minimizing AI Inference
 
 2. **AWS Lambda Function**
 - **Node.JS** runtime environment
